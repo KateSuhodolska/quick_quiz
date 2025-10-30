@@ -10,7 +10,7 @@ export const QuestionStep = ({
   onNext,
 }: QuestionStepProps) => {
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 w-80">
+    <div className="card">
       <h2 className="text-lg font-semibold mb-4 text-center">{question}</h2>
       <div className="flex flex-col gap-2">
         {options.map((option) => (

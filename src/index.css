@@ -1,25 +1,23 @@
 @import "tailwindcss";
 
-@layer base {
-  body {
-    @apply bg-gray-50 text-gray-900 font-sans antialiased;
-  }
-
-  button {
-    @apply focus:outline-none transition-all duration-200;
-  }
-
-  input {
-    @apply focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent;
-  }
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 @layer components {
   .card {
-    @apply bg-white rounded-lg shadow-md p-6;
+    @apply bg-white shadow-md rounded-lg p-6 w-90;
   }
-
-  .btn {
-    @apply bg-violet-500 text-white rounded-md py-2 px-4 hover:bg-violet-600 cursor-pointer transition;
+  .submit-btn {
+    @apply w-full bg-violet-500 text-white rounded-md py-2 hover:bg-violet-600 cursor-pointer transition;
+  }
+  .email-input {
+    @apply border rounded-md px-4 py-2 w-full mb-3 transition
+          focus:outline-none focus:ring-1 border-gray-300 focus:ring-violet-400 focus:border-violet-400;
+  }
+  .email-input.error {
+    @apply border-red-400 focus:ring-red-400;
   }
 }

@@ -5,57 +5,59 @@ import { ResultStep } from "./components/ResultStep";
 
 const QUESTIONS = [
   {
-    question: "What is your favorite color?",
-    options: ["Blue", "Green", "Pink", "Black"],
+    question: "Which version of React does your project use?",
+    options: ["v19.0", "v18.0", "v17.0", "🦕🦕🦕"],
   },
   {
-    question: "How often do you take quizzes?",
-    options: ["Every week", "Sometimes", "Rarely"],
+    question: "Which AI is best for coding?",
+    options: [
+      "Copilot",
+      "Cursor",
+      "ChatGPT",
+      "Doesn't matter who you fix after",
+    ],
   },
 ];
+const INITIAL_STATE = {
+  step: 0,
+  answers: [] as string[],
+  email: "",
+};
+const EXTRA_STEPS = 2;
 
 export default function App() {
-  const [quizState, setQuizState] = useLocalStorage("quizState", {
-    step: 0,
-    answers: [] as string[],
-    email: "",
-  });
-
+  const [quizState, setQuizState] = useLocalStorage("quizState", INITIAL_STATE);
   const { step, answers, email } = quizState;
 
-  const handleNextQuestion = (selectedAnswer: string) => {
-    setQuizState({
-      ...quizState,
-      answers: [...quizState.answers, selectedAnswer],
-      step: quizState.step + 1,
-    });
-  };
+  const totalSteps = QUESTIONS.length + EXTRA_STEPS;
+  const hasInvalidState =
+    step >= totalSteps || answers.length > QUESTIONS.length;
 
-  const handleEmailSubmit = (enteredEmail: string) => {
-    setQuizState({
-      ...quizState,
-      email: enteredEmail,
-      step: quizState.step + 1,
-    });
-  };
+  if (hasInvalidState) {
+    setQuizState(INITIAL_STATE);
+    return null;
+  }
 
-  const handleRestartQuiz = () => {
-    setQuizState({ step: 0, answers: [], email: "" });
-  };
+  const nextStep = (updates: Partial<typeof quizState>) =>
+    setQuizState({ ...quizState, ...updates, step: step + 1 });
+
+  const handleNextQuestion = (selectedAnswer: string) =>
+    nextStep({ answers: [...answers, selectedAnswer] });
+
+  const handleEmailSubmit = (enteredEmail: string) =>
+    nextStep({ email: enteredEmail });
+
+  const handleRestartQuiz = () => setQuizState(INITIAL_STATE);
 
   const screens = [
-    <QuestionStep
-      key="question1"
-      question={QUESTIONS[0].question}
-      options={QUESTIONS[0].options}
-      onNext={handleNextQuestion}
-    />,
-    <QuestionStep
-      key="question2"
-      question={QUESTIONS[1].question}
-      options={QUESTIONS[1].options}
-      onNext={handleNextQuestion}
-    />,
+    ...QUESTIONS.map((q, i) => (
+      <QuestionStep
+        key={i}
+        question={q.question}
+        options={q.options}
+        onNext={handleNextQuestion}
+      />
+    )),
     <EmailStep key="email" onSubmit={handleEmailSubmit} />,
     <ResultStep
       key="result"
